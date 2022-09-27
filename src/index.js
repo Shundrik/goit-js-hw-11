@@ -41,6 +41,9 @@ function onSubmit(e) {
   newAxiosApiFatch.fetchSerch().then(pictures => {
     console.log(pictures);
     console.log(newAxiosApiFatch);
+    pictures.length === 0 ? Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    ) : ""
 
     if (pictures.length > 0 && pictures.length === 40) {
       refs.btnLoadMore.classList.remove('not-visible');

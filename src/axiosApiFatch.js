@@ -27,13 +27,11 @@ export default class AxiosApiFatch {
       .then((response)=> {
         console.log(response);
         this.page += 1;
-    // let totalHits = response.data.totalHits;
-    // Notiflix.Notify.info(`Hooray! We found ${totalHits}  images.`);
-    
         let pictures =  response.data.hits;
         return pictures
       })
         .catch(function (error) {
+          
         // обработка ошибки
         console.log(error);
       })
