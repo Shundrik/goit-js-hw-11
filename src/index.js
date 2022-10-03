@@ -2,15 +2,11 @@ import Notiflix from 'notiflix';
 import Axios from 'axios';
 import debounce from 'lodash.debounce';
 import AxiosApiFatch from './axiosApiFatch';
+import SimpleLightbox from "simplelightbox";
+// Дополнительный импорт стилей
+import "simplelightbox/dist/simple-lightbox.min.css";
 
-// class LoadMoreBtn {
-
-//   constructor({selector, hidden = true}) {
-//     this.refs = this.getRefs(selector)
-//   }
-// hidden && this.hibe();
-
-// }
+// overlay();
 
 const refs = {
   form: document.querySelector('form'),
@@ -19,7 +15,10 @@ const refs = {
   btnLoadMore: document.querySelector('.load-more'),
   divGallery: document.querySelector('.gallery'),
 };
-
+let lightBox = new SimpleLightbox('.gallery__item a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 // renderThatsAll()
 
 const newAxiosApiFatch = new AxiosApiFatch();
@@ -37,7 +36,6 @@ function onSubmit(e) {
   }
 
   newAxiosApiFatch.resetPage();
-  // newAxiosApiFatch.fetchSerch().then(renderMarkup);
   newAxiosApiFatch.fetchSerch().then(pictures => {
     console.log(pictures);
     console.log(newAxiosApiFatch);
@@ -49,41 +47,79 @@ function onSubmit(e) {
       refs.btnLoadMore.classList.remove('not-visible');
       renderMarkup(pictures);
       console.log('remuve class');
+      lightBox.refresh()
       return;
     }
     renderMarkup(pictures);
-    // Notiflix.Notify.info("We're sorry, but you've reached the end of search results");
-    // return;
-  });
+     });
   clearPicture();
 }
+// ___________
+
+// function markup(pictures) {
+//   return pictures
+//     .map(({ views, previewURL, tags, likes, comments, downloads }) => {
+//       return `<div class="photo-card">
+//           <img src="${previewURL}" alt="${tags}" loading="lazy" />
+//         <div class="info">
+//           <p class="info-item">
+//             <b>likes ${likes}</b>
+//           </p>
+//           <p class="info-item">
+//             <b>views ${views}</b>
+//            </p>
+//           <p class="info-item">
+//            <b>comments ${comments}</b>
+//           </p>
+//           <p class="info-item">
+//             <b>downloads ${downloads}</b>
+//           </p>
+//         </div>
+//       </div>`;
+//     })
+//     .join('');
+// }
+
+// ______________
+
 
 function markup(pictures) {
+  console.log(pictures);
   return pictures
-    .map(({ views, previewURL, tags, likes, comments, downloads }) => {
-      return `<div class="photo-card">
-          <img src="${previewURL}" alt="${tags}" loading="lazy" />
+    .map(({ views, previewURL, tags, likes, comments, downloads, largeImageURL }) => {
+      return `<div class="gallery__item">
+      <a class="gallery__link" href="${largeImageURL}">
+         <img class="gallery__image" src="${previewURL}" alt="${tags}" title="${tags}" loading="lazy" />
+        </img>
         <div class="info">
-          <p class="info-item">
-            <b>likes ${likes}</b>
-          </p>
-          <p class="info-item">
-            <b>views ${views}</b>
+           <p class="info-item">
+             <b>likes ${likes}</b>
            </p>
-          <p class="info-item">
-           <b>comments ${comments}</b>
-          </p>
-          <p class="info-item">
-            <b>downloads ${downloads}</b>
-          </p>
-        </div>
+           <p class="info-item">
+             <b>views ${views}</b>
+            </p>
+           <p class="info-item">
+            <b>comments ${comments}</b>
+           </p>
+           <p class="info-item">
+             <b>downloads ${downloads}</b>
+           </p>
+         </div>
+        </a>
       </div>`;
     })
     .join('');
 }
+// const galleryCreate = markup(pictures);
+// galleryRef.insertAdjacentHTML("beforeEnd", galleryCreate);
+
+
+// lightBox.next()
+
 
 function renderMarkup(pictures) {
   refs.divGallery.insertAdjacentHTML('beforeend', markup(pictures));
+
 }
 
 function onLoadMore() {
@@ -111,10 +147,12 @@ function clearPicture() {
 // function clearTegP() {
 //   refs.divGallery.innerHTML = '';
 // }
-function renderThatsAll() {
-  // clearTegP()
-  refs.divGallery.insertAdjacentHTML(
-    'afterend',
-    `<p class="infoEnd"> OOO the end! </p>`
-  );
-}
+// function renderThatsAll() {
+//   // clearTegP()
+//   refs.divGallery.insertAdjacentHTML(
+//     'afterend',
+//     `<p class="infoEnd"> OOO the end! </p>`
+//   );
+// }
+
+
